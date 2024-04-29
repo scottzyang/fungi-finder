@@ -10,37 +10,82 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LogForm() {
-  const [text, setText] = useState("");
+  const [forageName, setForageName] = useState("");
+  const [journalEntry, setJournalEntry] = useState("");
+  const [total, setTotal] = useState("");
+  const [weatherConditions, setWeatherConditions] = useState("");
+
   const [getValue, setGetValue] = useState("");
 
-  const saveValue = () => {
-    if (text) {
-      AsyncStorage.setItem("cat", text);
-      setText("");
-      alert("Data saved BRUH");
-    } else {
-      alert("Please input data. BRUH");
+  const saveFormData = async () => {
+    // verify that fields are filled
+    if (
+      forageName.trim() === "" ||
+      journalEntry.trim() === "" ||
+      total === "" ||
+      weatherConditions.trim() === ""
+    ) {
+      alert("Please fill out all fields.");
+      return;
     }
-  };
-  const showValue = () => {
-    AsyncStorage.getItem("cat").then((value) => setGetValue(value));
+
+    // get current dates
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString();
+    const formattedTime = currentDate.toLocaleTimeString();
+
+    // input new data
+    const newData = {
+      forageName: forageName,
+      journalEntry: journalEntry,
+      total: total,
+      weatherConditions: weatherConditions,
+      date: formattedDate,
+      time: formattedTime,
+    };
+
+    // save to local storage
+    try {
+      await AsyncStorage.setItem(formattedDate, JSON.stringify(newData));
+      setForageName("");
+      setJournalEntry("");
+      setTotal(0);
+      setWeatherConditions("");
+      alert("Data saved successfully!");
+    } catch (error) {
+      alert("Failed to save data. Please try again.");
+      console.error(error);
+    }
   };
 
   return (
     <SafeAreaView>
-      <Text>Log Form for Mushrooms</Text>
+      <Text>Forage Logging</Text>
+      <Text>What did you find?</Text>
       <TextInput
-        placeholder="What did you find?"
-        value={text}
-        onChangeText={(e) => setText(e)}
+        placeholder="Enter name of forage"
+        value={forageName}
+        onChangeText={(e) => setForageName(e)}
       />
-      <TouchableOpacity onPress={saveValue}>
-        <Text>SAVE BRUH</Text>
+      <TextInput
+        placeholder="Journal Entry"
+        value={journalEntry}
+        onChangeText={(e) => setJournalEntry(e)}
+      />
+      <TextInput
+        placeholder="Total Found"
+        keyboardType="numeric"
+        value={total.toString()}
+        onChangeText={(e) => setTotal(parseInt(e))}
+      />
+      <TextInput
+        placeholder="Weather Conditions"
+        value={weatherConditions}
+        onChangeText={(e) => setWeatherConditions(e)}
+      />
+      <TouchableOpacity onPress={saveFormData}>
+        <Text>SAVE THIS</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={showValue}>
-        <Text>SEE BRUH</Text>
-      </TouchableOpacity>
-      <Text>{getValue}</Text>
     </SafeAreaView>
   );
 }
