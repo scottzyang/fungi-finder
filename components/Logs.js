@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Logs() {
+export default function Logs({ savingData }) {
   const [dataKeys, setDataKeys] = useState([]);
 
   // get all data from local storage
@@ -18,7 +18,7 @@ export default function Logs() {
     };
 
     fetchDataKeys();
-  }, []); // Run once on component mount
+  }, [savingData]); // Run once data is inputted
 
   return (
     <View>

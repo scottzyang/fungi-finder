@@ -10,7 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
 
-export default function LogForm() {
+export default function LogForm({ savingData, setSavingData }) {
   const [forageName, setForageName] = useState("");
   const [journalEntry, setJournalEntry] = useState("");
   const [total, setTotal] = useState("");
@@ -55,6 +55,7 @@ export default function LogForm() {
       setTotal("");
       setWeatherConditions("");
       alert("Data saved successfully!");
+      setSavingData(!savingData);
     } catch (error) {
       alert("Failed to save data. Please try again.");
       console.error(error);
