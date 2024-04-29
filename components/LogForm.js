@@ -8,14 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import uuid from "react-native-uuid";
 
 export default function LogForm() {
   const [forageName, setForageName] = useState("");
   const [journalEntry, setJournalEntry] = useState("");
   const [total, setTotal] = useState("");
   const [weatherConditions, setWeatherConditions] = useState("");
-
-  const [getValue, setGetValue] = useState("");
 
   const saveFormData = async () => {
     // verify that fields are filled
@@ -29,6 +28,9 @@ export default function LogForm() {
       return;
     }
 
+    // generate uuid
+    const entryId = uuid.v4();
+
     // get current dates
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString();
@@ -36,6 +38,7 @@ export default function LogForm() {
 
     // input new data
     const newData = {
+      id: entryId,
       forageName: forageName,
       journalEntry: journalEntry,
       total: total,
@@ -46,10 +49,10 @@ export default function LogForm() {
 
     // save to local storage
     try {
-      await AsyncStorage.setItem(formattedDate, JSON.stringify(newData));
+      await AsyncStorage.setItem(entryId, JSON.stringify(newData));
       setForageName("");
       setJournalEntry("");
-      setTotal(0);
+      setTotal("");
       setWeatherConditions("");
       alert("Data saved successfully!");
     } catch (error) {
@@ -75,8 +78,13 @@ export default function LogForm() {
       <TextInput
         placeholder="Total Found"
         keyboardType="numeric"
-        value={total.toString()}
-        onChangeText={(e) => setTotal(parseInt(e))}
+        value={total}
+        onChangeText={(e) => {
+          // Allow only numeric input
+          const numericValue = e.replace(/[^0-9]/g, "");
+          // Set the state with the filtered numeric value
+          setTotal(numericValue);
+        }}
       />
       <TextInput
         placeholder="Weather Conditions"
