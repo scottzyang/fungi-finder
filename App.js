@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./components/HomeScreen";
 import Logs from "./components/Logs";
 import LogForm from "./components/LogForm";
+import Log from "./components/Log";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +16,7 @@ export default function App() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Logs" component={Logs} />
         <Tab.Screen name="LogForm" component={LogForm} />
+        <Tab.Screen name="Log" component={Log} />
       </Tab.Navigator>
     </NavigationContainer>
   );
