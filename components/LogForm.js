@@ -1,11 +1,10 @@
-import { View } from "react-native";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  SafeAreaView,
-  StyleSheet,
-  TextInput,
+  View,
   Text,
+  TextInput,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
@@ -17,7 +16,7 @@ export default function LogForm({ savingData, setSavingData }) {
   const [weatherConditions, setWeatherConditions] = useState("");
 
   const saveFormData = async () => {
-    // verify that fields are filled
+    // Verify that fields are filled
     if (
       forageName.trim() === "" ||
       journalEntry.trim() === "" ||
@@ -28,15 +27,15 @@ export default function LogForm({ savingData, setSavingData }) {
       return;
     }
 
-    // generate uuid
+    // Generate uuid
     const entryId = uuid.v4();
 
-    // get current dates
+    // Get current dates
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString();
     const formattedTime = currentDate.toLocaleTimeString();
 
-    // input new data
+    // Input new data
     const newData = {
       id: entryId,
       forageName: forageName,
@@ -47,7 +46,7 @@ export default function LogForm({ savingData, setSavingData }) {
       time: formattedTime,
     };
 
-    // save to local storage
+    // Save to local storage
     try {
       await AsyncStorage.setItem(entryId, JSON.stringify(newData));
       setForageName("");
@@ -63,20 +62,23 @@ export default function LogForm({ savingData, setSavingData }) {
   };
 
   return (
-    <SafeAreaView>
-      <Text>Forage Logging</Text>
-      <Text>What did you find?</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Forage Logging</Text>
+      <Text style={styles.label}>What did you find?</Text>
       <TextInput
+        style={styles.input}
         placeholder="Enter name of forage"
         value={forageName}
         onChangeText={(e) => setForageName(e)}
       />
       <TextInput
+        style={styles.input}
         placeholder="Journal Entry"
         value={journalEntry}
         onChangeText={(e) => setJournalEntry(e)}
       />
       <TextInput
+        style={styles.input}
         placeholder="Total Found"
         keyboardType="numeric"
         value={total}
@@ -88,13 +90,51 @@ export default function LogForm({ savingData, setSavingData }) {
         }}
       />
       <TextInput
+        style={styles.input}
         placeholder="Weather Conditions"
         value={weatherConditions}
         onChangeText={(e) => setWeatherConditions(e)}
       />
-      <TouchableOpacity onPress={saveFormData}>
-        <Text>SAVE THIS</Text>
+      <TouchableOpacity style={styles.button} onPress={saveFormData}>
+        <Text style={styles.buttonText}>SAVE</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 40,
+    backgroundColor: "#F5E3B5",
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  input: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: "#A37F59",
+    borderRadius: 5,
+    padding: 15,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+});

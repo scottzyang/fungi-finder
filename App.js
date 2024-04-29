@@ -28,7 +28,7 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="LogForm">
+        <Tab.Screen name="FungiFound">
           {(props) => (
             <LogForm
               {...props}
