@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
 import uuid from "react-native-uuid";
 
 export default function LogForm({ savingData, setSavingData }) {
@@ -27,6 +28,16 @@ export default function LogForm({ savingData, setSavingData }) {
       return;
     }
 
+    // get geolocation
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+      return;
+    }
+
+    const location = await Location.getCurrentPositionAsync({});
+    console.log(location);
+
     // Generate uuid
     const entryId = uuid.v4();
 
@@ -44,6 +55,7 @@ export default function LogForm({ savingData, setSavingData }) {
       weatherConditions: weatherConditions,
       date: formattedDate,
       time: formattedTime,
+      location: location,
     };
 
     // Save to local storage

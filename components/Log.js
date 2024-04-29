@@ -13,6 +13,9 @@ export default function Log({ route }) {
       <Text style={styles.text}>Weather: {data.value.weatherConditions}</Text>
       <Text style={styles.text}>Date: {data.value.date}</Text>
       <Text style={styles.text}>Time: {data.value.time}</Text>
+      <Text style={styles.text}>Coordinates</Text>
+      <Text>Latitude: {data.value.location.coords.latitude}</Text>
+      <Text>Longitude: {data.value.location.coords.longitude}</Text>
     </View>
   );
 }
