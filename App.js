@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Provider } from "react-redux";
+import store from "./app/store";
 import { useState } from "react";
 import HomeScreen from "./components/HomeScreen";
 import Logs from "./components/Logs";
@@ -25,21 +27,23 @@ export default function App() {
   );
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="FungiFound">
-          {(props) => (
-            <LogForm
-              {...props}
-              savingData={savingData}
-              setSavingData={setSavingData}
-            />
-          )}
-        </Tab.Screen>
-        <Tab.Screen name="Logs" component={LogsStack} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="FungiFound">
+            {(props) => (
+              <LogForm
+                {...props}
+                savingData={savingData}
+                setSavingData={setSavingData}
+              />
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="Logs" component={LogsStack} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
