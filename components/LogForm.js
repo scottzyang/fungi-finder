@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
@@ -86,55 +88,84 @@ export default function LogForm() {
     }
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Forage Logging</Text>
-      <Text style={styles.label}>What did you find?</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter name of forage"
-        value={forageName}
-        onChangeText={(e) => dispatch(updateForageName(e))}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Journal Entry"
-        value={journalEntry}
-        onChangeText={(e) => dispatch(updateJournalEntry(e))}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Total Found"
-        keyboardType="numeric"
-        value={total}
-        onChangeText={(e) => {
-          // Allow only numeric input
-          const numericValue = e.replace(/[^0-9]/g, "");
-          // Set the state with the filtered numeric value
-          dispatch(updateTotal(numericValue));
-        }}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Weather Conditions"
-        value={weatherConditions}
-        onChangeText={(e) => dispatch(updateWeatherConditions(e))}
-      />
-      <TouchableOpacity style={styles.button} onPress={saveFormData}>
-        <Text style={styles.buttonText}>SAVE</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.outerContainer}>
+        <View style={styles.innerContainer}>
+          <Text style={styles.heading}>FungiFound</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputHeader}>Forage Name</Text>
+            <TextInput
+              style={[styles.input, styles.inputBeige]}
+              placeholder="Enter name of forage"
+              value={forageName}
+              onChangeText={(e) => dispatch(updateForageName(e))}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputHeader}>Journal Entry</Text>
+            <TextInput
+              style={[
+                styles.input,
+                styles.inputBeige,
+                styles.journalEntryInput,
+              ]}
+              placeholder="Journal Entry"
+              multiline={true}
+              numberOfLines={4} // Adjust as needed
+              value={journalEntry}
+              onChangeText={(e) => dispatch(updateJournalEntry(e))}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputHeader}>Total Found</Text>
+            <TextInput
+              style={[styles.input, styles.inputBeige]}
+              placeholder="Total Found"
+              keyboardType="numeric"
+              value={total}
+              onChangeText={(e) => {
+                // Allow only numeric input
+                const numericValue = e.replace(/[^0-9]/g, "");
+                // Set the state with the filtered numeric value
+                dispatch(updateTotal(numericValue));
+              }}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputHeader}>Weather Conditions</Text>
+            <TextInput
+              style={[styles.input, styles.inputBeige]}
+              placeholder="Weather Conditions"
+              value={weatherConditions}
+              onChangeText={(e) => dispatch(updateWeatherConditions(e))}
+            />
+          </View>
+          <TouchableOpacity style={styles.button} onPress={saveFormData}>
+            <Text style={styles.buttonText}>SAVE</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-    paddingVertical: 40,
-    backgroundColor: "#F5E3B5",
+  outerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5E3B5", // Tan color
+  },
+  innerContainer: {
+    width: "80%", // Adjust as needed
+    backgroundColor: "#FFFFFF", // White color for the form background
+    padding: 20,
     borderRadius: 10,
-    marginHorizontal: 20,
-    marginTop: 20,
   },
   heading: {
     fontSize: 24,
@@ -142,15 +173,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputHeader: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   input: {
     backgroundColor: "#FFFFFF",
     borderRadius: 5,
     padding: 10,
-    marginBottom: 10,
+  },
+  inputBeige: {
+    backgroundColor: "#F5F5DC", // Beige tint
   },
   button: {
     backgroundColor: "#A37F59",
@@ -161,5 +197,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  journalEntryInput: {
+    height: 100, // Adjust as needed
+    textAlignVertical: "top", // Align text to the top
   },
 });

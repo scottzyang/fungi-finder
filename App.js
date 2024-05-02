@@ -17,7 +17,13 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const LogsStack = () => (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={({ route }) => ({
+        headerStyle: { backgroundColor: "black" },
+        tabBarStyle: { backgroundColor: "black" },
+        headerTitleStyle: { color: "tan" },
+      })}
+    >
       <Stack.Screen name="Current Logs" component={Logs} />
       <Stack.Screen name="Log" component={Log} />
     </Stack.Navigator>
@@ -28,7 +34,9 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
+            headerStyle: { backgroundColor: "black" },
             tabBarStyle: { backgroundColor: "black" },
+            headerTitleStyle: { color: "tan" },
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
 
@@ -59,7 +67,11 @@ export default function App() {
         >
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="FungiFound" component={LogForm} />
-          <Tab.Screen name="Logs" component={LogsStack} />
+          <Tab.Screen
+            name="Logs"
+            component={LogsStack}
+            options={{ headerShown: false }}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>
