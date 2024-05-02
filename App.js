@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Ionicons } from "react-native-vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Provider } from "react-redux";
 import store from "./app/store";
 import HomeScreen from "./components/HomeScreen";
@@ -24,7 +26,37 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Tab.Navigator>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarStyle: { backgroundColor: "black" },
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+
+              if (route.name === "Home") {
+                iconName = focused
+                  ? "home" // Set focused icon
+                  : "home-outline"; // Set the not focused icon
+                return <Ionicons name={iconName} size={size} color={color} />;
+              } else if (route.name === "FungiFound") {
+                iconName = focused ? "gps-fixed" : "gps-not-fixed";
+                return (
+                  <MaterialIcons name={iconName} size={size} color={color} />
+                );
+              } else if (route.name === "Logs") {
+                iconName = focused ? "clipboard-text" : "clipboard-outline";
+                return (
+                  <MaterialCommunityIcons
+                    name={iconName}
+                    size={size}
+                    color={color}
+                  />
+                );
+              }
+            },
+            tabBarActiveTintColor: "olive", // Active/focussed color
+            tabBarInactiveTintColor: "tan", // Inactive color
+          })}
+        >
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="FungiFound" component={LogForm} />
           <Tab.Screen name="Logs" component={LogsStack} />
