@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,18 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  selectParsedData,
+  selectSavingData,
+  updateParsedData,
+} from "../features/fungiSlice";
 
-export default function Logs({ savingData, route, navigation }) {
-  const [parsedData, setParsedData] = useState([]);
+export default function Logs({ navigation }) {
+  const dispatch = useDispatch();
+  const savingData = useSelector(selectSavingData);
+  const parsedData = useSelector(selectParsedData);
 
   // Get all data from local storage
   useEffect(() => {
@@ -27,7 +35,7 @@ export default function Logs({ savingData, route, navigation }) {
           return { key, value: parsedValue };
         });
 
-        setParsedData(parsedDataValues);
+        dispatch(updateParsedData(parsedDataValues));
       } catch (error) {
         // Handle error
         console.error("Error retrieving data:", error);
@@ -58,7 +66,7 @@ export default function Logs({ savingData, route, navigation }) {
               try {
                 await AsyncStorage.clear();
                 // Update parsedData to an empty array to trigger re-render
-                setParsedData([]);
+                dispatch(updateParsedData([]));
                 // Show success alert
                 Alert.alert("Logs cleared!");
               } catch (error) {

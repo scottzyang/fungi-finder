@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Provider } from "react-redux";
 import store from "./app/store";
-import { useState } from "react";
 import HomeScreen from "./components/HomeScreen";
 import Logs from "./components/Logs";
 import LogForm from "./components/LogForm";
@@ -15,13 +14,9 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [savingData, setSavingData] = useState(false);
-
   const LogsStack = () => (
     <Stack.Navigator>
-      <Stack.Screen name="Current Logs">
-        {(props) => <Logs {...props} savingData={savingData} />}
-      </Stack.Screen>
+      <Stack.Screen name="Current Logs" component={Logs} />
       <Stack.Screen name="Log" component={Log} />
     </Stack.Navigator>
   );
@@ -31,15 +26,7 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="FungiFound">
-            {(props) => (
-              <LogForm
-                {...props}
-                savingData={savingData}
-                setSavingData={setSavingData}
-              />
-            )}
-          </Tab.Screen>
+          <Tab.Screen name="FungiFound" component={LogForm} />
           <Tab.Screen name="Logs" component={LogsStack} />
         </Tab.Navigator>
       </NavigationContainer>

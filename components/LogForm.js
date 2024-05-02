@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,14 +7,27 @@ import {
   StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import uuid from "react-native-uuid";
+import {
+  selectForageName,
+  selectJournalEntry,
+  selectTotal,
+  selectWeatherConditions,
+  toggleSavingData,
+  updateForageName,
+  updateJournalEntry,
+  updateTotal,
+  updateWeatherConditions,
+} from "../features/fungiSlice";
 
-export default function LogForm({ savingData, setSavingData }) {
-  const [forageName, setForageName] = useState("");
-  const [journalEntry, setJournalEntry] = useState("");
-  const [total, setTotal] = useState("");
-  const [weatherConditions, setWeatherConditions] = useState("");
+export default function LogForm() {
+  const dispatch = useDispatch();
+  const forageName = useSelector(selectForageName);
+  const journalEntry = useSelector(selectJournalEntry);
+  const total = useSelector(selectTotal);
+  const weatherConditions = useSelector(selectWeatherConditions);
 
   const saveFormData = async () => {
     // Verify that fields are filled
@@ -61,12 +74,12 @@ export default function LogForm({ savingData, setSavingData }) {
     // Save to local storage
     try {
       await AsyncStorage.setItem(entryId, JSON.stringify(newData));
-      setForageName("");
-      setJournalEntry("");
-      setTotal("");
-      setWeatherConditions("");
+      dispatch(updateForageName(""));
+      dispatch(updateJournalEntry(""));
+      dispatch(updateTotal(""));
+      dispatch(updateWeatherConditions(""));
       alert("Data saved successfully!");
-      setSavingData(!savingData);
+      dispatch(toggleSavingData());
     } catch (error) {
       alert("Failed to save data. Please try again.");
       console.error(error);
@@ -81,13 +94,13 @@ export default function LogForm({ savingData, setSavingData }) {
         style={styles.input}
         placeholder="Enter name of forage"
         value={forageName}
-        onChangeText={(e) => setForageName(e)}
+        onChangeText={(e) => dispatch(updateForageName(e))}
       />
       <TextInput
         style={styles.input}
         placeholder="Journal Entry"
         value={journalEntry}
-        onChangeText={(e) => setJournalEntry(e)}
+        onChangeText={(e) => dispatch(updateJournalEntry(e))}
       />
       <TextInput
         style={styles.input}
@@ -98,14 +111,14 @@ export default function LogForm({ savingData, setSavingData }) {
           // Allow only numeric input
           const numericValue = e.replace(/[^0-9]/g, "");
           // Set the state with the filtered numeric value
-          setTotal(numericValue);
+          dispatch(updateTotal(numericValue));
         }}
       />
       <TextInput
         style={styles.input}
         placeholder="Weather Conditions"
         value={weatherConditions}
-        onChangeText={(e) => setWeatherConditions(e)}
+        onChangeText={(e) => dispatch(updateWeatherConditions(e))}
       />
       <TouchableOpacity style={styles.button} onPress={saveFormData}>
         <Text style={styles.buttonText}>SAVE</Text>
