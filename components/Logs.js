@@ -112,6 +112,7 @@ export default function Logs({ navigation }) {
       ) : (
         <Text style={styles.noDataText}>No data available</Text>
       )}
+      {console.log(parsedData)}
     </View>
   );
 }

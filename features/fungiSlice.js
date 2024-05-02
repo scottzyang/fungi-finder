@@ -26,7 +26,7 @@ export const fungiSlice = createSlice({
       state.journalEntry = action.payload;
     },
     updateTotal: (state, action) => {
-      state.total = action.payload.total;
+      state.total = action.payload;
     },
     updateWeatherConditions: (state, action) => {
       state.weatherConditions = action.payload;

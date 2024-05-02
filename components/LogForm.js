@@ -132,6 +132,7 @@ export default function LogForm() {
                 // Allow only numeric input
                 const numericValue = e.replace(/[^0-9]/g, "");
                 // Set the state with the filtered numeric value
+                console.log("This is the number:", numericValue);
                 dispatch(updateTotal(numericValue));
               }}
             />
